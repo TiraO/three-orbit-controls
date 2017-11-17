@@ -34,8 +34,8 @@ describe("three-orbit-controls", function () {
       var mouseDown =
         new MouseEvent('mousedown', {
           button: orbitControls.mouseButtons.ORBIT,
-          clientX: 0,
-          clientY: 0
+          clientX: 50,
+          clientY: 50
         });
       domElement.dispatchEvent(mouseDown);
     });
@@ -48,15 +48,35 @@ describe("three-orbit-controls", function () {
       var mouseMove;
       beforeEach(function () {
         mouseMove = new MouseEvent('mousemove', {
-          clientX: 0,
-          clientY: 10
+          clientX: 50,
+          clientY: 60
         });
       });
 
       it("moves the camera upwards", function () {
         document.dispatchEvent(mouseMove);
         expect(camera.position.y).to.be.greaterThan(10);
-      })
+      });
+
+      describe("when the camera's up is in the z direction", function () {
+        beforeEach(function () {
+          camera.up.set(0, 0, 1);
+          orbitControls = new OrbitControls(camera, domElement);
+
+          var mouseDown =
+            new MouseEvent('mousedown', {
+              button: orbitControls.mouseButtons.ORBIT,
+              clientX: 50,
+              clientY: 60
+            });
+          domElement.dispatchEvent(mouseDown);
+        });
+
+        it("moves the camera in the z direction", function () {
+          document.dispatchEvent(mouseMove);
+          expect(camera.position.z).to.be.greaterThan(10);
+        });
+      });
     });
   });
 });
